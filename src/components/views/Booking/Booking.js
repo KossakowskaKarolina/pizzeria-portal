@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom/cjs/react-router-dom.min';
 import styles from './Booking.module.scss';
 
 const Booking = () => {
