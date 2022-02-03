@@ -48,7 +48,7 @@ const Tables = () => {
         {table: 2, type: 'event', id: '6543'},
         {table: 3, type: null, id: null},
         {table: 4, type: null, id: null},
-        {table: 5, type: 'event', id: '6543'},
+        {table: 5, type: 'event', id: '1212'},
       ],
     },
   ];
