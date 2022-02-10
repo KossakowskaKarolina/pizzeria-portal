@@ -13,11 +13,13 @@ const createActionName = name => `app/${reducerName}/${name}`;
 const FETCH_START = createActionName('FETCH_START');
 const FETCH_SUCCESS = createActionName('FETCH_SUCCESS');
 const FETCH_ERROR = createActionName('FETCH_ERROR');
+const UPDATE_TABLE = createActionName('UPDATE_TABLE');
 
 /* action creators */
 export const fetchStarted = payload => ({ payload, type: FETCH_START });
 export const fetchSuccess = payload => ({ payload, type: FETCH_SUCCESS });
 export const fetchError = payload => ({ payload, type: FETCH_ERROR });
+export const updateTable = payload => ({payload, type: UPDATE_TABLE});
 
 /* reducer */
 export default function reducer(statePart = [], action = {}) {
@@ -50,6 +52,27 @@ export default function reducer(statePart = [], action = {}) {
         },
       };
     }
+
+    case UPDATE_TABLE: {
+      return {
+        ...statePart,
+        data:
+          statePart.data.map(table => {
+            if (table.id === action.payload.id) {
+              return {
+                id: action.payload.id,
+                status: action.payload.status,
+                order: table.order,
+              };
+            } else {
+              return {
+                ...table,
+              };
+            }
+          }),
+      };
+    }
+
     default:
       return statePart;
   }
@@ -66,6 +89,19 @@ export const fetchFromAPI = () => { // dispatch podobnie ja w mapDispatchToProps
         dispatch(fetchSuccess(res.data)); // reakcja to zdispatchowanie akcji typu FETCH_SUCCESS, której jako argument przekazujemy dane otrzymane z serwera
       })
       .catch(err => { // jeśli wystąpił błąd połączenia, zamiast funkcji z .then, wykona się funkcja z .catch
+        dispatch(fetchError(err.message || true));
+      });
+  };
+};
+
+export const updateTableStatus = (id, status) => {
+  return (dispatch) => {
+    Axios
+      .put(`${api.url}/api/${api.tables}/${id}`, {status})
+      .then(res => {
+        dispatch(updateTable(res.data));
+      })
+      .catch(err => {
         dispatch(fetchError(err.message || true));
       });
   };
